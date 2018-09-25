@@ -1,98 +1,66 @@
-let lista= document.getElementById('lista');
-let inputUser = document.getElementById('search')
+let listView = document.getElementById('lista');
+let inputUser = document.getElementById('search');
 
-// class StarWars {
-//   constructor(starwarsCaracters, searchField){
-//     this.starwarsCaracters = [],
-//     this.searchField = searchField
-//   }
+let caracters=[];
 
-  let starwarsCaracters = fetch('https://swapi.co/api/people')
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function (myJson) {
-    // console.log(myJson.results);
-    updateList(myJson.results)
-  })
-  .catch(function(error){
-    console.log(error)
-  })
+fetch('https://swapi.co/api/people')
+.then(function(response) {
+  return response.json();
+})
+.then(function (data) {
+  console.log(data.results);
+  drawListCaracters(data.results)
+  caracters = data.results
+})
+.catch(function(error){
+  console.log(error)
+})
 
-  function updateList(arr){
-    for(let i = 0; i < arr.length; i++){
-      lista.innerHTML += `
-      <div class="box">
-        <article class="media">
-          <div class="media-left">
-            <figure class="image is-64x64">
-              <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
-            </figure>
-          </div>
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <strong>${arr[i].name}</strong>
-                <br>
-                  <em>Height: </em> ${arr[i].height}
-                  <br>
-                  <em>Hair color: </em> ${arr[i]['hair_color']}
-                  <br>
-                  <em>Eye color: </em> ${arr[i]['eye_color']}
-                  <br>
-                  <em>Gender: </em> ${arr[i].gender}
-                  <br>
-                  <em>Homeworld: </em> ${arr[i].homeworld}
-              </p>
-            </div>
-          </div>
-        </article>
+
+function drawListCaracters(data){
+  for(let i = 0; i < data.length; i++){
+    listView.innerHTML += `
+    <div id='box' class="box">
+      <article class="media">
+        <div class="media-left">
+          <figure class="image is-64x64">
+            <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
+          </figure>
         </div>
-        `
-    }
+        <div class="media-content">
+          <div class="content">
+            <p>
+              <strong>${data[i].name}</strong>
+              <br>
+                <em>Height: </em> ${data[i].height}
+                <br>
+                <em>Hair color: </em> ${data[i]['hair_color']}
+                <br>
+                <em>Eye color: </em> ${data[i]['eye_color']}
+                <br>
+                <em>Gender: </em> ${data[i].gender}
+                <br>
+                <em>Homeworld: </em> ${data[i].homeworld}
+            </p>
+          </div>
+        </div>
+      </article>
+      </div>
+      `
   }
+}
 
-  let searchField=0;
-  let onSearchChange = (event) => {
-    return searchField= event.target.value;
-  }
+inputUser.addEventListener("keyup", caractersFiltered)
 
-  inputUser.addEventListener("change", onSearchChange)
-
-
-
-  function CaractersFiltered(){
-    starwarsCaracters.filter(user => {
-      return starwarsCaracters.name.toLowerCase().includes(searchField.toLowerCase())
+function caractersFiltered(){
+    const filtered = caracters.filter(i => {
+      return i.name.toLowerCase().includes(inputUser.value.toLowerCase())
     })
-    return(
-      lista.innerHTML += `
-      <div class="box">
-        <article class="media">
-          <div class="media-left">
-            <figure class="image is-64x64">
-              <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
-            </figure>
-          </div>
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <strong>${starwarsCaracters[i].name}</strong>
-                <br>
-                  <em>Height: </em> ${starwarsCaracters[i].height}
-                  <br>
-                  <em>Hair color: </em> ${starwarsCaracters[i]['hair_color']}
-                  <br>
-                  <em>Eye color: </em> ${starwarsCaracters[i]['eye_color']}
-                  <br>
-                  <em>Gender: </em> ${starwarsCaracters[i].gender}
-                  <br>
-                  <em>Homeworld: </em> ${starwarsCaracters[i].homeworld}
-              </p>
-            </div>
-          </div>
-        </article>
-        </div>
-        `
-    )
-  }
+    console.log(filtered);
+    clear();
+    drawListCaracters(filtered);
+}
+
+function clear(){
+  document.getElementById("lista").innerHTML="";
+}
