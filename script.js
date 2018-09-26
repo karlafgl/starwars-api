@@ -52,6 +52,7 @@ function drawListCaracters(data){
 
 inputUser.addEventListener("keyup", caractersFiltered)
 
+
 function caractersFiltered(){
     const filtered = caracters.filter(i => {
       return i.name.toLowerCase().includes(inputUser.value.toLowerCase())
